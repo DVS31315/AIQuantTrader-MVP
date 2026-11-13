@@ -14,3 +14,8 @@ def test_llm_cannot_choose_fill_price(monkeypatch):
     plan, source = asyncio.run(llm.create_plan('test objective', {'last': 100.0}, [], 101.0))
     assert plan['entry'] == 101.0
     assert source == 'ollama'
+
+
+def test_planner_marks_news_and_objective_as_untrusted():
+    assert "untrusted data" in llm.SYSTEM
+    assert "News is evidence to assess" in llm.SYSTEM
