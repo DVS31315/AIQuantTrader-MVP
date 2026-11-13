@@ -26,6 +26,8 @@
 
 Repository: `DVS31315/AIQuantTrader-MVP`.
 
+- GitHub API currently reports repository visibility as public (`private: false`). The user previously saw a GitHub settings screen indicating Private; this discrepancy is unresolved and must be verified in repository Settings.
+
 ### Confirmed source files
 
 Application modules, tests, `requirements.txt`, README, PROJECT_STATE and CHAT_HANDOFF are present in the repository.
@@ -43,27 +45,27 @@ Application modules, tests, `requirements.txt`, README, PROJECT_STATE and CHAT_H
 ### Code-review observations (not yet all corrected)
 
 - Dashboard navigation labels Markets, News, Agent, Analytics and Settings are currently decorative; only the Trading workspace is implemented.
-- UI displays risk percentage as generic "Configured" rather than the actual configured value.
 - News sources are external RSS and may fail; source errors must remain visible. The deprecated Reuters feed was removed from the example configuration.
-- The current market snapshot's `change_pct` is the change across the fetched candle window, not a true rolling 24-hour metric; the dashboard label was misleading and must be corrected.
 - The monitor evaluates latest ticker snapshots at polling intervals; it is not a guaranteed exchange stop order and can miss intraperiod price excursions.
 - Forex/metals remain blocked. TradingView is not an API integration.
 - Remote source inspection is not equivalent to running the project on the user's Windows machine.
+
+- Dashboard metric is now named `Sample-window change` (not 24h), and the configured risk percentage is displayed instead of a generic status label.
 
 ## Validation history
 
 - Previous local user-confirmed state: compileall successful and 18 pytest tests passed after audit patch.
 - Prior API TestClient smoke checks and paper lifecycle checks were performed in an isolated environment as documented in the conversation.
-- The new GitHub Actions workflow has been committed but has not yet been observed running to completion.
+- GitHub Actions `Python tests` completed successfully for the latest reviewed code commit before this documentation update; compileall and pytest passed in GitHub CI.
 - The newly added PowerShell scripts have not been executed on the user's PC.
 - No server has been started by the assistant.
 
-- Added a unit test that checks the planner's untrusted-news/objective instruction is present. The test is committed but awaits CI execution.
+- Added a unit test that checks the planner's untrusted-news/objective instruction is present; it passed in GitHub Actions.
 
 ## Next engineering priorities
 
-1. Correct misleading 24h UI label and expose actual risk setting.
-2. Expand automated tests for DB lifecycle, agent orchestration, API error paths and runtime monitor.
-3. Improve paper monitor semantics/documentation (polling-based trigger simulation, not guaranteed stop execution).
-4. Make unsupported dashboard navigation functional or remove/disable it until implemented.
-5. End-to-end Windows verification after user runs the installer; only then consider the MVP launch-ready.
+1. Expand automated tests for DB lifecycle, agent orchestration, API error paths and runtime monitor.
+2. Improve paper monitor semantics/documentation (polling-based trigger simulation, not guaranteed stop execution).
+3. Make unsupported dashboard navigation functional or remove/disable it until implemented.
+4. End-to-end Windows verification after user runs the installer; only then consider the MVP launch-ready.
+5. Add verified FX/metals quote adapters before enabling those markets; never fabricate prices.
