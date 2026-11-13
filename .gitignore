@@ -1,0 +1,16 @@
+.venv/
+venv/
+.env
+*.db
+*.db-shm
+*.db-wal
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+logs/
+data/
+.backups/
+.DS_Store
+Thumbs.db
