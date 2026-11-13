@@ -1,28 +1,63 @@
-# AI QUANT TRADER — Fresh MVP
+# AI QUANT TRADER — Paper Trading MVP
 
-Standalone fresh project. Extract to **D:\AIQuantTrader_MVP**. All venv, database, logs and runtime data stay inside this folder.
+Standalone project. On the user's Windows machine the project root is:
+`D:\AIQuantTrader_MVP\AIQuantTrader_MVP`
 
-## Install / run
+## Windows setup
+
+Open PowerShell in the project root and run:
+
 ```powershell
-Set-Location D:\AIQuantTrader_MVP
+Set-Location "D:\AIQuantTrader_MVP\AIQuantTrader_MVP"
 .\install.ps1
-Copy-Item .env.example .env
+```
+
+The installer creates `.venv`, installs `requirements.txt`, creates `.env` from `.env.example` if needed, compiles the Python modules and runs pytest. **It does not start the server.**
+
+To start the app only when you choose:
+
+```powershell
 .\start.ps1
 ```
-Open http://127.0.0.1:8000. Run tests with:
-```powershell
-.\.venv\Scripts\python.exe -m pytest -q
-```
+
+Then open http://127.0.0.1:8000. Stop the server with Ctrl+C.
+
+## LLM configuration
+
+Default provider is local Ollama. The example configuration uses `qwen3:4b`; change `OLLAMA_MODEL` in your local `.env` only to a model installed in Ollama. For OpenAI, set `LLM_PROVIDER=openai` and provide `OPENAI_API_KEY` locally. Never commit `.env` or API keys.
 
 ## Included
-- FastAPI dashboard and API.
-- Bybit public market candles (no API keys).
-- RSS news ingestion.
-- Optional local Ollama planner; deterministic fallback clearly labeled.
-- Risk sizing from stop distance; Crypto max leverage 3x, Forex/Metals 5x.
-- Internal SQLite Paper Trading positions, SL/TP monitoring and event log.
-- No real-order API, no exchange credentials, no Bybit Demo execution.
 
-## Current scope
-This MVP's live market-data adapter is Crypto/Bybit only. Forex and Metals are represented in the domain/risk model but do not yet have live data connectors. The agent requires a valid SL for an opening trade so position risk can be calculated. This is a technical MVP, not a profitability claim.
-Ollama is optional; set `OLLAMA_MODEL` in `.env` to a model already installed locally (e.g. qwen3:8b).
+- FastAPI dashboard and JSON API.
+- Bybit public REST market candles and ticker prices; no exchange API keys.
+- RSS news ingestion with timeouts and per-feed error isolation.
+- Ollama / OpenAI-compatible planner; invalid or unavailable model response fails closed to HOLD.
+- Pydantic trade-plan validation and risk-based position sizing.
+- Hard leverage ceilings: crypto 3x; Forex and metals 5x in the risk model.
+- Internal SQLite paper positions, estimated fees/slippage, SL/TP monitoring and event log.
+- GitHub Actions compile + pytest workflow.
+
+## Explicit limitations
+
+- **Paper Trading only.** No live order routing, private exchange credentials or Bybit Demo/Testnet order execution.
+- Crypto/Bybit is the only implemented live quote adapter. Forex and metals are rejected by the API until verified data adapters are implemented.
+- The chart displays Bybit public candles; TradingView is not integrated as a live API.
+- RSS availability and quality depend on upstream feeds. Failed feeds are exposed in logs.
+- Fees and slippage are configurable simulation assumptions, not guaranteed exchange fills.
+- A technically valid MVP is not evidence of profitability. Use paper mode and review every decision.
+
+## API
+
+- `GET /` — dashboard
+- `GET /api/status` — app, paper account and recent events
+- `POST /api/run` — run one autonomous paper-analysis task
+- `GET /api/events` — event log
+- `GET /api/positions` — open and historical paper positions
+- `GET /api/market/{symbol}?timeframe=15` — public market snapshot and candles
+
+## Tests
+
+```powershell
+.\.venv\Scripts\python.exe -m compileall -q app tests
+.\.venv\Scripts\python.exe -m pytest -q
+```
