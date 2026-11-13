@@ -29,11 +29,12 @@ The GitHub repository now includes:
 - `.github/workflows/tests.yml`: compileall and pytest on push/PR.
 - Updated README with correct nested project path and limitations.
 
+- Planner prompt now explicitly treats user objectives and news as untrusted input and tells the model to ignore embedded instructions; a regression test was added. CI execution is still unverified.
+
 ## Audit notes
 
 - Decorative dashboard navigation items are not implemented pages.
-- Dashboard currently labels fetched-candle-window return as "24h / sample change"; this needs correction.
-- Dashboard risk label is generic rather than showing configured value.
+- Dashboard now labels fetched-candle-window return as "Sample-window change" and shows the configured risk percentage.
 - Position monitor polls latest ticker; simulated SL/TP behavior is not a guaranteed exchange stop/limit order and can miss intraperiod excursions.
 - RSS depends on upstream availability.
 - Remote review does not establish Windows end-to-end success.
