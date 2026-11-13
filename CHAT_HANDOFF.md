@@ -1,46 +1,47 @@
-# CHAT HANDOFF
+# CHAT HANDOFF — AI QUANT TRADER MVP
 
-Continue with fresh standalone package at `D:\AIQuantTrader_MVP`; do not alter or delete old `D:\AIQuantTrader`.
-All runtime files/venv/database/logs must stay on D:.
-Paper Trading only. No real orders, API keys or Bybit Demo execution.
-Leverage caps: Crypto 3x; Forex/Metals 5x. Do not invent daily PnL lockouts.
-Current package: FastAPI UI, Bybit public market data, RSS news, optional local Ollama planner, labeled fallback, risk sizing, SQLite and internal paper positions.
-Windows install/test/run is still unverified. Forex/Metals live feeds are not implemented.
-Immediate next step: install.ps1, pytest, start.ps1, then one agent run.
+## Project root and boundaries
 
----
+- Current project: `D:\AIQuantTrader_MVP\AIQuantTrader_MVP`.
+- Older project `D:\AIQuantTrader` is separate and must never be changed.
+- Do not assume access to the user's local D: drive. Use the connected GitHub repository for source edits.
+- Keep all local venv/database/logs on D:.
 
-## Handoff — 2026-11-13 MVP package
+## Safety
 
-Current target remains `D:\AIQuantTrader_MVP\AIQuantTrader_MVP`. Do not touch `D:\AIQuantTrader`.
+- Paper Trading only. No real orders, no private exchange keys, no Bybit Demo/Testnet order execution.
+- Crypto leverage max 3x. Forex/metals max 5x only after verified quote adapters exist.
+- No synthetic quotes or invented prices. No invented daily PnL targets/loss limits/trade-count limits.
+- Forex and metals API requests currently return unavailable; only crypto/Bybit public market data is implemented.
+- TradingView is not currently a live API integration.
 
-A replacement package has been prepared as a patch archive. It must be applied from the target project root using the supplied PowerShell installer. The installer backs up overwritten files into a timestamped `.backups` folder, then copies the replacement modules and appends this handoff plus the project-state entry. It does not launch the server.
+## Current architecture
 
-Architecture: FastAPI app; SQLite WAL store; Bybit public REST for closed candles and ticker prices; RSS news via bounded HTTP requests; OpenAI-compatible and Ollama LLM provider; Pydantic plan validation; risk-based sizing; local paper position book; background SL/TP monitor; browser dashboard.
+FastAPI dashboard/API; Bybit public candles and ticker; RSS news; Ollama/OpenAI-compatible planner; fail-safe HOLD; Pydantic plan validation; risk sizing; SQLite event/account/position store; internal paper position lifecycle; background ticker polling.
 
-Safety constraints: paper only; no private exchange keys; no live order endpoints; crypto leverage <=3x; Forex/Metals <=5x in Risk Engine but unavailable until verified feeds are integrated; no fabricated quotes; fail-safe HOLD if LLM fails; no invented daily limits.
+## Repository updates
 
-After patch application: run compileall and pytest only (do not start the server until tests are reviewed). Then report exact test output. The launcher is `scripts\run.ps1` or `python -m app.run` and reads APP_HOST/APP_PORT. Server launch requires user authorization/instruction.
+The GitHub repository now includes:
+- `install.ps1`: creates venv, installs requirements, compiles and runs tests; does not start server.
+- `start.ps1`: starts server only when explicitly run.
+- `.env.example`: safe local configuration; default Ollama model qwen3:4b.
+- `.gitignore`: excludes local secrets, venv, DB, logs and backups.
+- `.github/workflows/tests.yml`: compileall and pytest on push/PR.
+- Updated README with correct nested project path and limitations.
 
+## Audit notes
 
+- Decorative dashboard navigation items are not implemented pages.
+- Dashboard currently labels fetched-candle-window return as "24h / sample change"; this needs correction.
+- Dashboard risk label is generic rather than showing configured value.
+- Position monitor polls latest ticker; simulated SL/TP behavior is not a guaranteed exchange stop/limit order and can miss intraperiod excursions.
+- RSS depends on upstream availability.
+- Remote review does not establish Windows end-to-end success.
 
-## Актуальный статус — 13.11.2026
+## Next steps
 
-- Патч MVP успешно установлен локально.
-- Резервная копия: `.backups\mvp_patch_20261113_050557`.
-- `app/` содержит все 13 модулей приложения.
-- Локальная компиляция: `python -m compileall -q app tests` — успешно.
-- Локальные автоматические тесты: **11 passed in 1.42s**.
-- Сервер не запускался.
-- Старый проект `D:\AIQuantTrader` не изменялся.
-- Следующий этап: техническая проверка конфигурации, API, базы данных и внешних подключений до первого запуска.
-- Ограничения сохраняются: только внутренний Paper Trading; Forex/Metals заблокированы до подключения проверенных источников котировок; TradingView не заявляется как готовая API-интеграция.
-
-## Handoff update — 13.11.2026 technical audit corrections
-
-Target: `D:\AIQuantTrader_MVP\AIQuantTrader_MVP`. Never modify `D:\AIQuantTrader`.
-
-A follow-up correction patch is ready. It makes the simulated fill price come from a fresh Bybit public ticker immediately before opening; model-generated entry prices are ignored. It improves stop-gap fills, includes estimated fees/slippage in the per-trade risk budget, checks aggregate used margin, serializes concurrent agent runs, hard-validates leverage caps, filters failed RSS placeholders from LLM context, and validates ticker values. Tests were expanded.
-
-Preparation-environment validation: `compileall` succeeded and 18 tests passed. This result must be repeated locally after applying the correction package. No server has been started. Paper Trading only; no real orders. Forex/Metals remain blocked. TradingView is not a live API integration. Do not create `.env` or start the server without the user's explicit instruction.
-
+1. Continue code audit and correct misleading dashboard metrics.
+2. Add tests for API, DB, orchestration and monitor behavior.
+3. Check GitHub Actions result when available.
+4. User can run `Set-Location "D:\AIQuantTrader_MVP\AIQuantTrader_MVP"; .\install.ps1` when ready. This does not start the server.
+5. Server startup requires the user's explicit decision via `.\start.ps1`.
