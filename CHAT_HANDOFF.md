@@ -29,7 +29,9 @@ The GitHub repository now includes:
 - `.github/workflows/tests.yml`: compileall and pytest on push/PR.
 - Updated README with correct nested project path and limitations.
 
-- Planner prompt now explicitly treats user objectives and news as untrusted input and tells the model to ignore embedded instructions; a regression test was added. CI execution is still unverified.
+- Planner prompt now explicitly treats user objectives and news as untrusted input and tells the model to ignore embedded instructions; a regression test was added. GitHub Actions completed successfully for the latest code commit (compileall + pytest).
+
+- GitHub API reports repository visibility `public` (`private: false`), despite the user previously seeing a Private label in Settings. This is unresolved; verify visibility in GitHub Settings before treating the repository as private.
 
 ## Audit notes
 
@@ -41,8 +43,8 @@ The GitHub repository now includes:
 
 ## Next steps
 
-1. Continue code audit and correct misleading dashboard metrics.
-2. Add tests for API, DB, orchestration and monitor behavior.
-3. Check GitHub Actions result when available.
+1. Add tests for API, DB, orchestration and monitor behavior.
+2. Improve dashboard navigation (implement sections or disable decorative items).
+3. Continue hardening runtime/paper-monitor semantics.
 4. User can run `Set-Location "D:\AIQuantTrader_MVP\AIQuantTrader_MVP"; .\install.ps1` when ready. This does not start the server.
 5. Server startup requires the user's explicit decision via `.\start.ps1`.
