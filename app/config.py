@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     openai_base_url: str = "https://api.openai.com/v1"
     openai_model: str = "gpt-4.1-mini"
     ollama_base_url: str = "http://127.0.0.1:11434"
-    ollama_model: str = "qwen3:8b"
+    ollama_model: str = "qwen3:4b"
     ollama_timeout_seconds: int = Field(default=45, ge=5, le=180)
     starting_equity: float = Field(default=10000.0, gt=0)
     risk_per_trade_pct: float = Field(default=0.5, gt=0, le=5)
