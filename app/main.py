@@ -23,7 +23,7 @@ async def home(): return HTML
 @app.get("/api/status")
 async def status():
     positions=db.get_positions(True)
-    return {"status":"running","mode":"paper","real_orders_enabled":False,"equity":db.get_equity(),"open_positions":positions,"events":db.get_events(30),"provider":settings.llm_provider,"monitor_interval":settings.market_poll_seconds,"supported_live_markets":["crypto"],"unavailable_markets":["forex","metals"]}
+    return {"status":"running","mode":"paper","real_orders_enabled":False,"equity":db.get_equity(),"open_positions":positions,"events":db.get_events(30),"provider":settings.llm_provider,"monitor_interval":settings.market_poll_seconds,"supported_live_markets":["crypto"],"unavailable_markets":["forex","metals"],"risk_per_trade_pct":settings.risk_per_trade_pct,"crypto_max_leverage":settings.crypto_max_leverage}
 
 @app.post("/api/run")
 async def run_task(req:RunRequest):
