@@ -14,7 +14,7 @@
 - FastAPI dashboard and endpoints in `app/main.py`.
 - Bybit public closed-candle and ticker adapter in `app/market.py`.
 - RSS ingestion in `app/news.py`.
-- Ollama and OpenAI-compatible JSON planner in `app/llm.py`; failures fall back to explicit HOLD.
+- Ollama and OpenAI-compatible JSON planner in `app/llm.py`; failures fall back to explicit HOLD. Planner prompt explicitly treats objectives/news as untrusted data and rejects embedded instructions.
 - Plan validation in `app/models.py`.
 - Risk-based sizing and leverage validation in `app/risk.py`.
 - SQLite event/account/position storage in `app/db.py`.
@@ -34,7 +34,7 @@ Application modules, tests, `requirements.txt`, README, PROJECT_STATE and CHAT_H
 
 - README previously referred to `install.ps1` and `start.ps1`, but neither existed. Added both scripts.
 - README path did not reflect the actual nested Windows project root. Corrected it.
-- `.env.example` was missing. Added a safe example configuration; it contains no credentials and defaults Ollama to qwen3:4b.
+- `.env.example` was missing. Added a safe example configuration; it contains no credentials and defaults Ollama to qwen3:4b. The `Settings` default now matches qwen3:4b.
 - `.gitignore` was missing. Added exclusions for venv, .env, database, logs, backups and Python caches.
 - Added GitHub Actions workflow to compile and run pytest on pushes and pull requests.
 - Installer performs dependency installation, compileall and pytest, and deliberately does not launch the server.
@@ -57,6 +57,8 @@ Application modules, tests, `requirements.txt`, README, PROJECT_STATE and CHAT_H
 - The new GitHub Actions workflow has been committed but has not yet been observed running to completion.
 - The newly added PowerShell scripts have not been executed on the user's PC.
 - No server has been started by the assistant.
+
+- Added a unit test that checks the planner's untrusted-news/objective instruction is present. The test is committed but awaits CI execution.
 
 ## Next engineering priorities
 
